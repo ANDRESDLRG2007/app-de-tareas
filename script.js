@@ -106,18 +106,18 @@ function loadTasks() {
 function checkTaskNotifications(tasks) {
     if (!("Notification" in window) || Notification.permission !== "granted") return;
     const now = new Date();
-    const tomorrow = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     tasks.forEach(task => {
         if (!task.deadline) return;
         const taskDate = new Date(task.deadline + 'T00:00:00');
         if (
-            taskDate.getFullYear() === tomorrow.getFullYear() &&
-            taskDate.getMonth() === tomorrow.getMonth() &&
-            taskDate.getDate() === tomorrow.getDate()
+            taskDate.getFullYear() === today.getFullYear() &&
+            taskDate.getMonth() === today.getMonth() &&
+            taskDate.getDate() === today.getDate()
         ) {
             // Notificar solo si no se ha notificado antes en esta sesión
             if (!window["notified_" + task.id]) {
-                new Notification("Tarea para mañana", {
+                new Notification("¡Tienes una tarea para hoy!", {
                     body: `${task.name} - ${task.materia}`
                 });
                 window["notified_" + task.id] = true;
@@ -129,8 +129,15 @@ function checkTaskNotifications(tasks) {
 
 // Función para formatear la fecha (mostrar día de la semana)
 function formatDate(date) {
+    // Mostrar la fecha como YYYY-MM-DD y también el día de la semana
+    // sin convertir a UTC para evitar desfase
+    if (!date) return '';
+    // Extraer año, mes, día
+    const [year, month, day] = date.split('-');
+    const localDate = new Date(Number(year), Number(month) - 1, Number(day));
     const options = { weekday: 'long', month: 'short', day: 'numeric' };
-    return new Date(date).toLocaleDateString('es-ES', options);
+    // Mostrar: miércoles, 17 sept
+    return localDate.toLocaleDateString('es-ES', options);
 }
 
 // Función para marcar una tarea como completada
