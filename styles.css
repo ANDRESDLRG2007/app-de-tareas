@@ -26,7 +26,6 @@ body {
     overflow: hidden;
 }
 
-/* Título */
 h1 {
     font-size: 1.8em;
     color: #4CAF50;
@@ -34,47 +33,76 @@ h1 {
     margin-bottom: 20px;
 }
 
-/* Formulario para agregar tarea */
-.task-input {
+/* Botón para agregar tarea */
+.add-task-btn {
+    width: 100%;
+    padding: 12px;
+    background-color: #4CAF50;
+    color: white;
+    font-size: 1.2em;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-bottom: 20px;
+}
+
+.add-task-btn:hover {
+    background-color: #45a049;
+}
+
+/* Filtros */
+.filters {
     display: flex;
-    align-items: center;
     justify-content: space-between;
     margin-bottom: 20px;
 }
 
-.task-input input {
-    flex-grow: 1;
-    padding: 12px 15px;
-    font-size: 1em;
+.filters select {
+    width: 48%;
+    padding: 10px;
+    border-radius: 5px;
     border: 1px solid #ddd;
-    border-radius: 5px;
-    margin-right: 10px;
-    background-color: #f9f9f9;
-    transition: all 0.3s ease;
+    font-size: 0.9em;
 }
 
-.task-input input:focus {
-    border-color: #4CAF50;
-    outline: none;
+/* Modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    overflow: auto;
+}
+
+.modal-content {
     background-color: #fff;
+    margin: 10% auto;
+    padding: 20px;
+    border-radius: 10px;
+    width: 80%;
+    max-width: 400px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
-.task-input button {
-    padding: 12px 20px;
-    background-color: #4CAF50;
-    color: white;
-    font-size: 1em;
-    border: none;
-    border-radius: 5px;
+.close-btn {
+    color: #aaa;
+    font-size: 1.5em;
+    position: absolute;
+    top: 10px;
+    right: 20px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
 }
 
-.task-input button:hover {
-    background-color: #45a049;
+.close-btn:hover {
+    color: #000;
 }
 
-/* Lista de tareas */
+/* Estilos de tarea */
 ul {
     list-style-type: none;
     padding: 0;
@@ -121,18 +149,7 @@ li button.remove:hover {
     background-color: #c82333;
 }
 
-/* Notificaciones de recordatorios */
-#notifications {
-    margin-top: 20px;
-    padding: 10px;
-    background-color: #ffdd57;
-    color: #856404;
-    border-radius: 8px;
-    text-align: center;
-    font-weight: bold;
-    display: none;
-}
-
+/* Media query para móvil */
 @media (max-width: 500px) {
     .container {
         padding: 15px;

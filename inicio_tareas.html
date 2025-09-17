@@ -3,24 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestión de Tareas</title>
+    <title>Mi Lista de Tareas</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
         <h1>Mi Lista de Tareas</h1>
-        
-        <!-- Formulario para agregar tareas -->
-        <div class="task-input">
-            <input type="text" id="taskName" placeholder="Agrega una tarea">
-            <button onclick="addTask()">Agregar tarea</button>
+
+        <!-- Filtros -->
+        <div class="filters">
+            <select id="filterMateria">
+                <option value="">Filtrar por Materia</option>
+                <option value="Ingles">Inglés III</option>
+                <option value="Emprendimiento">Emprendimiento I</option>
+                <option value="BasesDatos">Gestión de Bases de Datos</option>
+                <option value="Web">Construcción de Aplicaciones Web</option>
+                <option value="Moviles">Tecnologías para Aplicaciones Móviles</option>
+                <option value="Estructura">Estructura de Datos Avanzada</option>
+            </select>
+            <select id="filterFecha">
+                <option value="">Filtrar por Fecha</option>
+                <option value="masCercano">Más Cercano</option>
+            </select>
         </div>
 
-        <!-- Lista de tareas -->
+        <!-- Agregar Tarea -->
+        <button id="openModal" class="add-task-btn">Agregar tarea</button>
+
+        <!-- Lista de Tareas -->
         <ul id="taskList"></ul>
         
-        <!-- Notificaciones -->
-        <div id="notifications"></div>
+        <!-- Modal para Crear Tarea -->
+        <div id="taskModal" class="modal">
+            <div class="modal-content">
+                <span class="close-btn" onclick="closeModal()">×</span>
+                <h2>Crear Nueva Tarea</h2>
+                <input type="text" id="taskName" placeholder="Descripción de la tarea" />
+                <input type="date" id="taskDeadline" />
+                <select id="taskMateria">
+                    <option value="Ingles">Inglés III</option>
+                    <option value="Emprendimiento">Emprendimiento I</option>
+                    <option value="BasesDatos">Gestión de Bases de Datos</option>
+                    <option value="Web">Construcción de Aplicaciones Web</option>
+                    <option value="Moviles">Tecnologías para Aplicaciones Móviles</option>
+                    <option value="Estructura">Estructura de Datos Avanzada</option>
+                </select>
+                <button onclick="addTask()">Guardar Tarea</button>
+            </div>
+        </div>
+
     </div>
 
     <script src="script.js"></script>
