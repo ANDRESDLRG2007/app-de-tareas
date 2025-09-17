@@ -14,12 +14,12 @@
         <div class="filters">
             <select id="filterMateria">
                 <option value="">Filtrar por Materia</option>
-                <option value="Ingles">Inglés III</option>
-                <option value="Emprendimiento">Emprendimiento I</option>
-                <option value="BasesDatos">Gestión de Bases de Datos</option>
-                <option value="Web">Construcción de Aplicaciones Web</option>
-                <option value="Moviles">Tecnologías para Aplicaciones Móviles</option>
-                <option value="Estructura">Estructura de Datos Avanzada</option>
+                <option value="Inglés III">Inglés III</option>
+                <option value="Emprendimiento I">Emprendimiento I</option>
+                <option value="Gestión de Bases de Datos">Gestión de Bases de Datos</option>
+                <option value="Construcción de Aplicaciones Web">Construcción de Aplicaciones Web</option>
+                <option value="Tecnologías para Aplicaciones Móviles">Tecnologías para Aplicaciones Móviles</option>
+                <option value="Estructura de Datos Avanzada">Estructura de Datos Avanzada</option>
             </select>
             <select id="filterFecha">
                 <option value="">Filtrar por Fecha</option>
@@ -41,17 +41,22 @@
                 <input type="text" id="taskName" placeholder="Descripción de la tarea" />
                 <input type="date" id="taskDeadline" />
                 <select id="taskMateria">
-                    <option value="Ingles">Inglés III</option>
-                    <option value="Emprendimiento">Emprendimiento I</option>
-                    <option value="BasesDatos">Gestión de Bases de Datos</option>
-                    <option value="Web">Construcción de Aplicaciones Web</option>
-                    <option value="Moviles">Tecnologías para Aplicaciones Móviles</option>
-                    <option value="Estructura">Estructura de Datos Avanzada</option>
+                    <option value="Inglés III">Inglés III</option>
+                    <option value="Emprendimiento I">Emprendimiento I</option>
+                    <option value="Gestión de Bases de Datos">Gestión de Bases de Datos</option>
+                    <option value="Construcción de Aplicaciones Web">Construcción de Aplicaciones Web</option>
+                    <option value="Tecnologías para Aplicaciones Móviles">Tecnologías para Aplicaciones Móviles</option>
+                    <option value="Estructura de Datos Avanzada">Estructura de Datos Avanzada</option>
                 </select>
                 <button onclick="addTask()">Guardar Tarea</button>
             </div>
         </div>
 
+        <!-- Pie de página con botones para establecer y borrar filtro -->
+        <div class="footer-buttons">
+            <button id="setFilterBtn">Establecer Filtro</button>
+            <button id="clearFilterBtn">Borrar Filtro</button>
+        </div>
     </div>
 
     <script src="script.js"></script>

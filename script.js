@@ -1,15 +1,27 @@
 let tasks = [];
 
+// Materias disponibles
+const availableMaterias = [
+    "Inglés III",
+    "Emprendimiento I",
+    "Gestión de Bases de Datos",
+    "Construcción de Aplicaciones Web",
+    "Tecnologías para Aplicaciones Móviles",
+    "Estructura de Datos Avanzada"
+];
+
 document.addEventListener('DOMContentLoaded', () => {
     // Cargar tareas desde el almacenamiento local
     loadTasks();
-    
+
     // Abre el modal para agregar tarea
     document.getElementById('openModal').addEventListener('click', openModal);
-    
-    // Filtrar tareas por materia o fecha
-    document.getElementById('filterMateria').addEventListener('change', filterTasks);
-    document.getElementById('filterFecha').addEventListener('change', filterTasks);
+
+    // Establecer filtro
+    document.getElementById('setFilterBtn').addEventListener('click', setFilter);
+
+    // Borrar filtro
+    document.getElementById('clearFilterBtn').addEventListener('click', clearFilter);
 });
 
 // Abre el modal
@@ -58,13 +70,25 @@ function loadTasks() {
         const li = document.createElement('li');
         li.classList.toggle('completed', task.completed);
 
+        const formattedDate = formatDate(task.deadline);
         li.innerHTML = `
-            <span>${task.name} - ${task.materia} (Fecha límite: ${task.deadline})</span>
-            <button onclick="toggleTask(${task.id})">Marcar como completada</button>
-            <button class="remove" onclick="removeTask(${task.id})">Eliminar</button>
+            <div class="task-card">
+                <p class="date-day">${formattedDate}</p>
+                <p class="description">${task.name} - ${task.materia}</p>
+                <div class="task-buttons">
+                    <button onclick="toggleTask(${task.id})">✅</button>
+                    <button class="remove" onclick="removeTask(${task.id})">🗑️</button>
+                </div>
+            </div>
         `;
         taskList.appendChild(li);
     });
+}
+
+// Función para formatear la fecha (mostrar día de la semana)
+function formatDate(date) {
+    const options = { weekday: 'long', month: 'short', day: 'numeric' };
+    return new Date(date).toLocaleDateString('es-ES', options);
 }
 
 // Función para marcar una tarea como completada
@@ -83,20 +107,38 @@ function removeTask(id) {
 }
 
 // Función para filtrar tareas
-function filterTasks() {
-    const filterMateria = document.getElementById('filterMateria').value;
-    const filterFecha = document.getElementById('filterFecha').value;
-
+function filterTasks(materia = '', fecha = '') {
     let filteredTasks = tasks;
 
-    if (filterMateria) {
-        filteredTasks = filteredTasks.filter(t => t.materia === filterMateria);
+    // Filtrar por materia
+    if (materia) {
+        filteredTasks = filteredTasks.filter(t => t.materia === materia);
     }
 
-    if (filterFecha === 'masCercano') {
+    // Filtrar por fecha
+    if (fecha === 'masCercano') {
         filteredTasks = filteredTasks.sort((a, b) => new Date(a.deadline) - new Date(b.deadline));
     }
 
+    // Mostrar las tareas filtradas
     tasks = filteredTasks;
+    loadTasks();
+}
+
+// Función para establecer el filtro
+function setFilter() {
+    const filterMateria = document.getElementById('filterMateria').value;
+    const filterFecha = document.getElementById('filterFecha').value;
+
+    filterTasks(filterMateria, filterFecha); // Llamamos a la función de filtro con los valores seleccionados
+}
+
+// Función para borrar el filtro
+function clearFilter() {
+    // Restablecer los filtros a valores vacíos
+    document.getElementById('filterMateria').value = '';
+    document.getElementById('filterFecha').value = '';
+
+    // Recargar todas las tareas sin filtros aplicados
     loadTasks();
 }
