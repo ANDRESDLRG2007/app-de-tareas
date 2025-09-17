@@ -10,8 +10,11 @@ const availableMaterias = [
     "Estructura de Datos Avanzada"
 ];
 
+// Referencia a la colección de tareas en Firestore
+const tasksCollection = db.collection("tasks");
+
 document.addEventListener('DOMContentLoaded', () => {
-    // Cargar tareas desde el almacenamiento local
+    // Cargar tareas desde Firestore
     loadTasks();
 
     // Abre el modal para agregar tarea
@@ -46,43 +49,39 @@ function addTask() {
     }
 
     const task = {
-        id: Date.now(),
         name: taskName,
         deadline: taskDeadline,
         materia: taskMateria,
         completed: false,
+        createdAt: new Date()
     };
-
-    tasks.push(task);
-    localStorage.setItem('tasks', JSON.stringify(tasks));
-    loadTasks();
-    closeModal();
+    tasksCollection.add(task)
+        .then(() => {
+            loadTasks();
+            closeModal();
+        })
+        .catch((error) => {
+            alert("Error al guardar la tarea: " + error);
+        });
 }
 
 // Función para cargar tareas
 function loadTasks() {
     const taskList = document.getElementById('taskList');
     taskList.innerHTML = '';
-
-    tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-
-    tasks.forEach(task => {
-        const li = document.createElement('li');
-        li.classList.toggle('completed', task.completed);
-
-        const formattedDate = formatDate(task.deadline);
-        li.innerHTML = `
-            <div class="task-card">
-                <p class="date-day">${formattedDate}</p>
-                <p class="description">${task.name} - ${task.materia}</p>
-                <div class="task-buttons">
-                    <button onclick="toggleTask(${task.id})">✅</button>
-                    <button class="remove" onclick="removeTask(${task.id})">🗑️</button>
-                </div>
-            </div>
-        `;
-        taskList.appendChild(li);
-    });
+    tasksCollection.orderBy("createdAt", "desc").get()
+        .then((querySnapshot) => {
+            tasks = [];
+            querySnapshot.forEach((doc) => {
+                const task = doc.data();
+                task.id = doc.id;
+                tasks.push(task);
+            });
+            renderTasks(tasks);
+        })
+        .catch((error) => {
+            alert("Error al cargar tareas: " + error);
+        });
 }
 
 // Función para formatear la fecha (mostrar día de la semana)
@@ -94,36 +93,43 @@ function formatDate(date) {
 // Función para marcar una tarea como completada
 function toggleTask(id) {
     const task = tasks.find(t => t.id === id);
-    task.completed = !task.completed;
-    localStorage.setItem('tasks', JSON.stringify(tasks));
-    loadTasks();
+    if (!task) return;
+    tasksCollection.doc(id).update({ completed: !task.completed })
+        .then(() => loadTasks())
+        .catch((error) => alert("Error al actualizar tarea: " + error));
 }
 
 // Función para eliminar tarea
 function removeTask(id) {
-    tasks = tasks.filter(t => t.id !== id);
-    localStorage.setItem('tasks', JSON.stringify(tasks));
-    loadTasks();
+    tasksCollection.doc(id).delete()
+        .then(() => loadTasks())
+        .catch((error) => alert("Error al eliminar tarea: " + error));
 }
 
 // Función para filtrar tareas
 function filterTasks(materia = '', fecha = '') {
-    // Obtener todas las tareas desde localStorage
-    let allTasks = JSON.parse(localStorage.getItem('tasks')) || [];
-    let filteredTasks = allTasks;
-
-    // Filtrar por materia
+    let query = tasksCollection;
     if (materia) {
-        filteredTasks = filteredTasks.filter(t => t.materia === materia);
+        query = query.where("materia", "==", materia);
     }
-
-    // Filtrar por fecha
     if (fecha === 'masCercano') {
-        filteredTasks = filteredTasks.sort((a, b) => new Date(a.deadline) - new Date(b.deadline));
+        query = query.orderBy("deadline", "asc");
+    } else {
+        query = query.orderBy("createdAt", "desc");
     }
-
-    // Mostrar las tareas filtradas
-    renderTasks(filteredTasks);
+    query.get()
+        .then((querySnapshot) => {
+            let filteredTasks = [];
+            querySnapshot.forEach((doc) => {
+                const task = doc.data();
+                task.id = doc.id;
+                filteredTasks.push(task);
+            });
+            renderTasks(filteredTasks);
+        })
+        .catch((error) => {
+            alert("Error al filtrar tareas: " + error);
+        });
 }
 // Función para renderizar una lista de tareas específica (usada por el filtro)
 function renderTasks(taskArray) {
@@ -132,14 +138,18 @@ function renderTasks(taskArray) {
     taskArray.forEach(task => {
         const li = document.createElement('li');
         li.classList.toggle('completed', task.completed);
-        const formattedDate = formatDate(task.deadline);
+        // Asegurarse de que la fecha esté en formato válido
+        let formattedDate = '';
+        if (task.deadline) {
+            formattedDate = formatDate(task.deadline);
+        }
         li.innerHTML = `
             <div class="task-card">
                 <p class="date-day">${formattedDate}</p>
                 <p class="description">${task.name} - ${task.materia}</p>
                 <div class="task-buttons">
-                    <button onclick="toggleTask(${task.id})">✅</button>
-                    <button class="remove" onclick="removeTask(${task.id})">🗑️</button>
+                    <button onclick="toggleTask('${task.id}')">✅</button>
+                    <button class="remove" onclick="removeTask('${task.id}')">🗑️</button>
                 </div>
             </div>
         `;

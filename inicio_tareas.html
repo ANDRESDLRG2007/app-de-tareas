@@ -59,6 +59,25 @@
         </div>
     </div>
 
-    <script src="script.js"></script>
+        <!-- Firebase App (core SDK) -->
+        <script src="https://www.gstatic.com/firebasejs/12.2.1/firebase-app-compat.js"></script>
+        <!-- Firestore SDK -->
+        <script src="https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore-compat.js"></script>
+        <script>
+            const firebaseConfig = {
+                apiKey: "AIzaSyCS6cngWvK_dJCKv73qqb2dZNrErrvJo6k",
+                authDomain: "appdetareas-af39f.firebaseapp.com",
+                projectId: "appdetareas-af39f",
+                storageBucket: "appdetareas-af39f.firebasestorage.app",
+                messagingSenderId: "873396380878",
+                appId: "1:873396380878:web:4b1cd722fb6d558faa9c9f",
+                measurementId: "G-5KJMZNN7LB"
+            };
+            // Inicializar Firebase
+            firebase.initializeApp(firebaseConfig);
+            // Inicializar Firestore
+            const db = firebase.firestore();
+        </script>
+        <script src="script.js"></script>
 </body>
 </html>
