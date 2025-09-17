@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bienvenidos a la App</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Estilos para el splash screen */
+    body {
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: black;
+    }
+
+    .logo-container {
+      background-color: #222;
+      border-radius: 20px;
+      padding: 30px;
+      animation: fadeOut 5s forwards;
+    }
+
+    .logo-container img {
+      width: 150px; /* Ajusta el tamaño de tu logo */
+      height: auto;
+    }
+
+    /* Efecto de desvanecimiento */
+    @keyframes fadeOut {
+      0% {
+        opacity: 1;
+      }
+      100% {
+        opacity: 0;
+      }
+    }
+
+    /* Cuando el logo desaparezca, se redirige a la siguiente página */
+    .fade {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Contenedor del logo -->
+  <div class="logo-container">
+    <img src="img/logo.png" alt="Logo de la App">
+  </div>
+
+  <script>
+    // Redirigir después de 5 segundos con la animación de desvanecimiento
+    setTimeout(function() {
+      window.location.href = 'inicio_tareas.html';
+    }, 3000); // 5000ms = 5 segundos
+  </script>
+
+</body>
+</html>
