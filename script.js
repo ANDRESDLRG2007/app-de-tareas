@@ -108,7 +108,9 @@ function removeTask(id) {
 
 // Función para filtrar tareas
 function filterTasks(materia = '', fecha = '') {
-    let filteredTasks = tasks;
+    // Obtener todas las tareas desde localStorage
+    let allTasks = JSON.parse(localStorage.getItem('tasks')) || [];
+    let filteredTasks = allTasks;
 
     // Filtrar por materia
     if (materia) {
@@ -121,8 +123,28 @@ function filterTasks(materia = '', fecha = '') {
     }
 
     // Mostrar las tareas filtradas
-    tasks = filteredTasks;
-    loadTasks();
+    renderTasks(filteredTasks);
+}
+// Función para renderizar una lista de tareas específica (usada por el filtro)
+function renderTasks(taskArray) {
+    const taskList = document.getElementById('taskList');
+    taskList.innerHTML = '';
+    taskArray.forEach(task => {
+        const li = document.createElement('li');
+        li.classList.toggle('completed', task.completed);
+        const formattedDate = formatDate(task.deadline);
+        li.innerHTML = `
+            <div class="task-card">
+                <p class="date-day">${formattedDate}</p>
+                <p class="description">${task.name} - ${task.materia}</p>
+                <div class="task-buttons">
+                    <button onclick="toggleTask(${task.id})">✅</button>
+                    <button class="remove" onclick="removeTask(${task.id})">🗑️</button>
+                </div>
+            </div>
+        `;
+        taskList.appendChild(li);
+    });
 }
 
 // Función para establecer el filtro
