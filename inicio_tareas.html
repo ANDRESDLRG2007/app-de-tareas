@@ -1,6 +1,25 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+    <style>
+        .back-btn-modal {
+            position: absolute;
+            left: 10px;
+            top: 10px;
+            cursor: pointer;
+            font-size: 2rem;
+            background: #fff;
+            border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            padding: 6px 10px 6px 8px;
+            transition: background 0.2s, box-shadow 0.2s;
+            z-index: 10;
+        }
+        .back-btn-modal:hover {
+            background: #f0f0f0;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+        }
+    </style>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mi Lista de Tareas</title>
@@ -38,7 +57,7 @@
         <!-- Modal para Crear Tarea -->
         <div id="taskModal" class="modal">
             <div class="modal-content">
-                <span style="position:absolute;left:10px;top:10px;cursor:pointer;font-size:1.5rem;" onclick="closeModal()">⬅️</span>
+                <span class="back-btn-modal" onclick="closeModal()">⬅️</span>
                 <span class="close-btn" onclick="closeModal()">×</span>
                 <h2>Crear Nueva Tarea</h2>
                 <input type="text" id="taskName" placeholder="Descripción de la tarea" />
