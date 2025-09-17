@@ -10,10 +10,14 @@ const availableMaterias = [
     "Estructura de Datos Avanzada"
 ];
 
-// Referencia a la colección de tareas en Firestore
-const tasksCollection = db.collection("tasks");
+
+let tasksCollection;
 
 document.addEventListener('DOMContentLoaded', () => {
+
+    // Inicializar referencia a la colección de tareas en Firestore
+    tasksCollection = db.collection("tasks");
+
     // Cargar tareas desde Firestore
     loadTasks();
 
@@ -68,7 +72,9 @@ function addTask() {
 // Función para cargar tareas
 function loadTasks() {
     const taskList = document.getElementById('taskList');
+    const loadingDiv = document.getElementById('loadingTasks');
     taskList.innerHTML = '';
+    loadingDiv.style.display = 'block';
     tasksCollection.orderBy("createdAt", "desc").get()
         .then((querySnapshot) => {
             tasks = [];
@@ -81,6 +87,9 @@ function loadTasks() {
         })
         .catch((error) => {
             alert("Error al cargar tareas: " + error);
+        })
+        .finally(() => {
+            loadingDiv.style.display = 'none';
         });
 }
 
