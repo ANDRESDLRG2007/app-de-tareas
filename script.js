@@ -14,6 +14,10 @@ const availableMaterias = [
 let tasksCollection;
 
 document.addEventListener('DOMContentLoaded', () => {
+    // Pedir permiso de notificación al cargar la app
+    if ("Notification" in window && Notification.permission !== "granted") {
+        Notification.requestPermission();
+    }
 
     // Inicializar referencia a la colección de tareas en Firestore
     tasksCollection = db.collection("tasks");
@@ -52,9 +56,13 @@ function addTask() {
         return;
     }
 
+    // Ajustar fecha a medianoche local para evitar desfase por zona horaria
+    const [year, month, day] = taskDeadline.split('-');
+    const localDate = new Date(Number(year), Number(month) - 1, Number(day), 0, 0, 0);
     const task = {
         name: taskName,
-        deadline: taskDeadline,
+        // Guardar la fecha como string ISO local (sin desfase)
+        deadline: localDate.toISOString().split('T')[0],
         materia: taskMateria,
         completed: false,
         createdAt: new Date()
@@ -84,6 +92,8 @@ function loadTasks() {
                 tasks.push(task);
             });
             renderTasks(tasks);
+            // Revisar notificaciones después de cargar tareas
+            checkTaskNotifications(tasks);
         })
         .catch((error) => {
             alert("Error al cargar tareas: " + error);
@@ -91,6 +101,30 @@ function loadTasks() {
         .finally(() => {
             loadingDiv.style.display = 'none';
         });
+
+// Función para notificar tareas próximas
+function checkTaskNotifications(tasks) {
+    if (!("Notification" in window) || Notification.permission !== "granted") return;
+    const now = new Date();
+    const tomorrow = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+    tasks.forEach(task => {
+        if (!task.deadline) return;
+        const taskDate = new Date(task.deadline + 'T00:00:00');
+        if (
+            taskDate.getFullYear() === tomorrow.getFullYear() &&
+            taskDate.getMonth() === tomorrow.getMonth() &&
+            taskDate.getDate() === tomorrow.getDate()
+        ) {
+            // Notificar solo si no se ha notificado antes en esta sesión
+            if (!window["notified_" + task.id]) {
+                new Notification("Tarea para mañana", {
+                    body: `${task.name} - ${task.materia}`
+                });
+                window["notified_" + task.id] = true;
+            }
+        }
+    });
+}
 }
 
 // Función para formatear la fecha (mostrar día de la semana)
